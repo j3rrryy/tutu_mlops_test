@@ -1,0 +1,55 @@
+volumes:
+  postgres_data:
+
+services:
+  mlops_app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - 80:8000
+    env_file:
+      - ./.env
+    volumes:
+      - ./artifacts/:/app/artifacts/:ro
+      - ./src/repository/migrations/:/app/repository/migrations/
+    depends_on:
+      item_features_loader:
+        condition: service_completed_successfully
+    container_name: mlops_app
+
+  item_features_loader:
+    build: .
+    env_file:
+      - ./.env
+    volumes:
+      - ./artifacts/:/app/artifacts/:ro
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    command: [ "sh", "-c", "uv run python ./load_features.py" ]
+
+  migrate:
+    build: .
+    env_file:
+      - ./.env
+    volumes:
+      - ./src/repository/migrations/:/app/repository/migrations/
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: [ "sh", "-c", "uv run alembic upgrade head" ]
+
+  postgres:
+    image: postgres:17.5-alpine
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    container_name: postgres
