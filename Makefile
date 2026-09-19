@@ -1,4 +1,4 @@
-.PHONY: sync lint format test docker-up docker-down makemigrations migrate downgrade load-features
+.PHONY: sync lint format test test-all docker-up docker-down makemigrations migrate downgrade load-features
 
 sync:
 	uv sync --dev
@@ -12,6 +12,11 @@ format:
 
 test:
 	uv run --group test pytest -m "not e2e" ./src/tests --cov=./src --cov-config=./src/tests/.coveragerc --cov-fail-under=75
+
+test-all:
+	docker build -t mlops_app:test .
+	docker compose -f ./docker-compose.test.yml up --abort-on-container-exit --exit-code-from mlops_app mlops_app
+	docker compose -f ./docker-compose.test.yml down -v
 
 docker-up:
 	docker compose up -d --build
