@@ -3,7 +3,7 @@ from fastapi import status
 from enums import Prepayment
 from schemas import PredictionRequest, PredictionResponse
 
-from ..mocks import FLOAT_VALUE, ID, INT_VALUE, MODEL_VERSION
+from ..mocks import FLOAT_VALUE, ID, INT_VALUE, ITEM_ID, MODEL_VERSION
 
 PREFIX = "/predictions"
 
@@ -11,7 +11,7 @@ PREFIX = "/predictions"
 def test_create_prediction(client):
     data = PredictionRequest(
         request_id=ID,
-        item_id=str(ID),
+        item_id=ITEM_ID,
         item_price=FLOAT_VALUE,
         delivery_days=INT_VALUE,
         client_is_app=True,

@@ -6,12 +6,12 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from dto import ItemFeaturesDTO
 
-from ..mocks import FLOAT_VALUE, ID, TIMESTAMP
+from ..mocks import FLOAT_VALUE, ITEM_ID, TIMESTAMP
 
 
 @pytest.mark.asyncio
 async def test_upsert_items(session, item_features_repository):
-    dto = ItemFeaturesDTO(str(ID), FLOAT_VALUE, FLOAT_VALUE, TIMESTAMP)
+    dto = ItemFeaturesDTO(ITEM_ID, FLOAT_VALUE, FLOAT_VALUE, TIMESTAMP)
 
     res = await item_features_repository.upsert_items([dto])
 
@@ -31,9 +31,9 @@ async def test_upsert_items_no_items(session, item_features_repository):
 async def test_get_item_features(session, item_features, item_features_repository):
     session.scalar = AsyncMock(return_value=item_features)
 
-    res = await item_features_repository.get_item_features(str(ID))
+    res = await item_features_repository.get_item_features(ITEM_ID)
 
-    assert res == ItemFeaturesDTO(str(ID), FLOAT_VALUE, FLOAT_VALUE, TIMESTAMP)
+    assert res == ItemFeaturesDTO(ITEM_ID, FLOAT_VALUE, FLOAT_VALUE, TIMESTAMP)
     session.scalar.assert_awaited_once()
 
 
@@ -41,7 +41,7 @@ async def test_get_item_features(session, item_features, item_features_repositor
 async def test_get_item_features_not_found(session, item_features_repository):
     session.scalar = AsyncMock(return_value=None)
 
-    res = await item_features_repository.get_item_features(str(ID))
+    res = await item_features_repository.get_item_features(ITEM_ID)
 
     assert res is None
     session.scalar.assert_awaited_once()
@@ -52,7 +52,7 @@ async def test_get_item_features_exception(session, item_features_repository):
     session.scalar.side_effect = SQLAlchemyError("Details")
 
     with pytest.raises(HTTPException) as exc_info:
-        await item_features_repository.get_item_features(str(ID))
+        await item_features_repository.get_item_features(ITEM_ID)
 
     assert exc_info.value.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     assert exc_info.value.detail == "Internal database error: Details"

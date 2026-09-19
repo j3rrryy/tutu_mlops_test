@@ -20,7 +20,8 @@ from repository import (
     PredictionRepository,
 )
 
-ID = UUID("00e51a90-0f94-4ecb-8dd1-399ba409508e")
+ID = UUID("9e597dee-4253-4a30-8ec3-20a1cb10d56f")
+ITEM_ID = "ITEM-001"
 INT_VALUE = 3
 FLOAT_VALUE = 0.75
 MODEL_VERSION = "1.0.0"
@@ -50,7 +51,7 @@ def create_item_features_repository() -> ItemFeaturesRepositoryProtocol:
     crud = AsyncMock(spec=ItemFeaturesRepository)
     crud.upsert_items = AsyncMock(return_value=None)
     crud.get_item_features = AsyncMock(
-        return_value=ItemFeaturesDTO(str(ID), FLOAT_VALUE, FLOAT_VALUE, TIMESTAMP)
+        return_value=ItemFeaturesDTO(ITEM_ID, FLOAT_VALUE, FLOAT_VALUE, TIMESTAMP)
     )
     return crud
 
@@ -115,7 +116,7 @@ def create_empty_mock_csv(tmp_path: Path) -> str:
 
 def create_item_features() -> ItemFeatures:
     return ItemFeatures(
-        item_id=str(ID),
+        item_id=ITEM_ID,
         historical_return_rate=FLOAT_VALUE,
         avg_item_losses_30d=FLOAT_VALUE,
         updated_at=TIMESTAMP,

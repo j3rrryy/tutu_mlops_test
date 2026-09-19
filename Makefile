@@ -11,7 +11,7 @@ format:
 	uv run --group lint ruff format
 
 test:
-	uv run --group test pytest ./src/tests --cov=./src --cov-config=./src/tests/.coveragerc --cov-fail-under=75
+	uv run --group test pytest -m "not e2e" ./src/tests --cov=./src --cov-config=./src/tests/.coveragerc --cov-fail-under=75
 
 docker-up:
 	docker compose up -d --build

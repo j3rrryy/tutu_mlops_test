@@ -6,7 +6,7 @@ from fastapi import HTTPException, status
 from dto import PredictionDTO, PredictionRequestDTO
 from enums import Prepayment
 
-from ..mocks import FLOAT_VALUE, ID, INT_VALUE, MODEL_VERSION
+from ..mocks import FLOAT_VALUE, ID, INT_VALUE, ITEM_ID, MODEL_VERSION
 
 
 @pytest.mark.asyncio
@@ -17,7 +17,7 @@ async def test_create_prediction(
     prediction_model_metadata,
 ):
     dto = PredictionRequestDTO(
-        ID, str(ID), FLOAT_VALUE, INT_VALUE, True, Prepayment.SBP
+        ID, ITEM_ID, FLOAT_VALUE, INT_VALUE, True, Prepayment.SBP
     )
     mocked_prediction_repository.get_prediction = AsyncMock(return_value=None)
 
@@ -33,7 +33,7 @@ async def test_create_prediction(
 @pytest.mark.asyncio
 async def test_create_prediction_exists(prediction_service, prediction_model):
     dto = PredictionRequestDTO(
-        ID, str(ID), FLOAT_VALUE, INT_VALUE, True, Prepayment.SBP
+        ID, ITEM_ID, FLOAT_VALUE, INT_VALUE, True, Prepayment.SBP
     )
 
     res = await prediction_service.create_prediction(dto)
@@ -50,7 +50,7 @@ async def test_create_prediction_item_features_not_found(
     prediction_model,
 ):
     dto = PredictionRequestDTO(
-        ID, str(ID), FLOAT_VALUE, INT_VALUE, True, Prepayment.SBP
+        ID, ITEM_ID, FLOAT_VALUE, INT_VALUE, True, Prepayment.SBP
     )
     mocked_prediction_repository.get_prediction = AsyncMock(return_value=None)
     mocked_item_features_repository.get_item_features = AsyncMock(return_value=None)
