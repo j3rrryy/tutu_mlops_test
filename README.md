@@ -1,5 +1,13 @@
 # Тестовое задание MLOps
 
+Сервис предсказания расходов за отказ от покупки конкретного товара.
+FastAPI + PostgreSQL + sklearn-модель (`artifacts/model.joblib`).
+
+> [!NOTE]
+> Приложение доступно на `http://localhost`
+>
+> Swagger UI: `http://localhost/docs`
+
 ## Что нужно для запуска
 
 - Docker (обязательно)
@@ -9,7 +17,7 @@
 
 Создайте в корне проекта файл `.env` на основе `.env.example`. (Либо для быстрого запуска можно просто переименовать `.env.example` в `.env`)
 
-## Запуск и загрузка признаков
+## Запуск
 
 ```shell
 make docker-up
@@ -20,6 +28,8 @@ make docker-up
 ```shell
 docker compose up -d --build
 ```
+
+Поднимается PostgreSQL ⮕ прогоняются миграции ⮕ загружаются признаки товаров `artifacts/item_features.csv` ⮕ стартует основное приложение.
 
 ## Остановка
 
@@ -38,7 +48,8 @@ docker compose down
 - `make sync` - установка отсутствующих зависимостей
 - `make lint` - запуск линтеров (ruff, mypy)
 - `make format` - запуск форматировщика (ruff)
-- `make test` - запуск тестов
+- `make test` - запуск unit-тестов
+- `make test-all` - запуск всех тестов (unit + e2e, используется Docker)
 - `make docker-up` - запуск контейнеров
 - `make docker-down` - остановка контейнеров
 - `make makemigrations m="<название_миграции>"` - создание новой миграции
