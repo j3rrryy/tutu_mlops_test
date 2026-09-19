@@ -59,7 +59,7 @@ async def test_create_prediction_item_features_not_found(
         await prediction_service.create_prediction(dto)
 
     assert exc_info.value.status_code == status.HTTP_404_NOT_FOUND
-    assert exc_info.value.detail == f"Item {ID} features not found"
+    assert exc_info.value.detail == f"Item {ITEM_ID} features not found"
     prediction_model.predict.assert_not_called()
 
 

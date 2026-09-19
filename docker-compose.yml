@@ -26,7 +26,7 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
-    command: [ "sh", "-c", "uv run python ./load_features.py" ]
+    command: sh -c "uv run python ./load_features.py"
 
   migrate:
     build: .
@@ -37,7 +37,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: [ "sh", "-c", "uv run alembic upgrade head" ]
+    command: sh -c "uv run alembic upgrade head"
 
   postgres:
     image: postgres:17.5-alpine
